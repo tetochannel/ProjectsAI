@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" href="assets/icon.png" type="image/icon type">
+    <title>AllInfo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin=""
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+      integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+  </head>
+  <body style = "overflow-x: auto; overflow-x: hidden; display: block;">
+    <nav class="navbar bg-dark">
+      <a class="btn btn-outline-light" href="" role="button">
+        <h1><strong>AllInfo</strong></h1>
+      </a>
+      <ul style="margin: 5px" class="navbar-nav mr-auto mt-auto">
+        <div id="container">
+          <input class ="custom-control-input" width="auto" id="mode" type="checkbox" data-toggle="toggle" data-on="IP" data-onstyle="info" data-off="Geo" data-offstyle="outline-warning" checked>
+        </div>
+      </ul>
+    </nav>
+    <div id="page" class="d-flex flex-column align-items-center justify-content-center" style="opacity:0"> <!--style="opacity: 0.5;"-->
+      <div class="row">
+        <div class="col">
+          <h1><strong>You're near:</strong></h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div id="map" style="width: 1500px; height: 500px; margin: 10px"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-*-*">
+          <h2>Timezone:&nbsp;</h2>
+        </div>
+        <div class="col-*-*">
+          <h2 id="current-timezone"></h2>
+        </div>
+        <div class="col-*-*">
+          <h2>&nbsp;- GMT&nbsp;</h2>
+        </div>
+        <div class="col-*-*">
+          <h2 id="current-GMT"></h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-*-*">
+            <h1><b>Time:&nbsp;</b></h1>
+        </div>
+        <div class="col-*-*">
+          <h1 style="font-weight: bold;" id="current-hours"></h1>
+        </div>
+        <div class="col-*-*">
+          <h1><b>:</b></h1>
+        </div>
+        <div class="col-*-*">
+          <h1 style="font-weight: bold;" id="current-minutes"></h1>
+        </div>
+        <div class="col-*-*">
+          <h1><b>:</b></h1>
+        </div>
+        <div class="col-*-*">
+          <h1 style="font-weight: bold;" id="current-seconds"></h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card-body">
+            <div class="card border-0">
+              <div class="row">
+                <div class="col-*-* my-auto">
+                  <img unselectable="on" onselectstart="return false;" onmousedown="return false;" id="current-weather"/>
+                </div>
+                <div class="col">
+                  <div class="card-body">
+                    <h4 style="font-weight: bold" id="current-description"></h4>
+                    <h1 id="current-temp"></h1>
+                    <h3 id="current-date"></h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="forecast" class="row text-center">
+        <div class="col-*-*">
+          <div class="card-*-* border-0">
+            <h6 id="next-day-0"></h6>
+            <img unselectable="on" onselectstart="return false;" onmousedown="return false;" id="next-weather-0" />
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h6 style="font-weight: bold" id="next-description-0"></h6>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <h6 id="next-max-temp-0"></h6>
+                </div>
+                <div class="col">
+                  <h6 class="text-muted" id="next-felt-temp-0"></h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-*-*">
+          <div class="card-*-* border-0">
+            <h6 id="next-day-1"></h6>
+            <img unselectable="on" onselectstart="return false;" onmousedown="return false;" id="next-weather-1" />
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h6 style="font-weight: bold" id="next-description-1"></h6>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <h6 id="next-max-temp-1"></h6>
+                </div>
+                <div class="col">
+                  <h6 class="text-muted" id="next-felt-temp-1"></h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-*-*">
+          <div class="card-*-* border-0">
+            <h6 id="next-day-2"></h6>
+            <img unselectable="on" onselectstart="return false;" onmousedown="return false;" id="next-weather-2" />
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h6 style="font-weight: bold" id="next-description-2"></h6>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <h6 id="next-max-temp-2"></h6>
+                </div>
+                <div class="col">
+                  <h6 class="text-muted" id="next-felt-temp-2"></h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-*-*">
+          <div class="card-*-* border-0">
+            <h6 id="next-day-3"></h6>
+            <img unselectable="on" onselectstart="return false;" onmousedown="return false;" id="next-weather-3" />
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h6 style="font-weight: bold" id="next-description-3"></h6>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <h6 id="next-max-temp-3"></h6>
+                </div>
+                <div class="col">
+                  <h6 class="text-muted" id="next-felt-temp-3"></h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-*-*">
+          <div class="card-*-* border-0">
+            <h6 id="next-day-4"></h6>
+            <img unselectable="on" onselectstart="return false;" onmousedown="return false;" id="next-weather-4" />
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h6 style="font-weight: bold" id="next-description-4"></h6>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <h6 id="next-max-temp-4"></h6>
+                </div>
+                <div class="col">
+                  <h6 class="text-muted" id="next-felt-temp-4"></h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-*-*">
+          <div class="card-*-* border-0">
+            <h6 id="next-day-5"></h6>
+            <img unselectable="on" onselectstart="return false;" onmousedown="return false;" id="next-weather-5" />
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h6 style="font-weight: bold" id="next-description-5"></h6>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <h6 id="next-max-temp-5"></h6>
+                </div>
+                <div class="col">
+                  <h6 class="text-muted" id="next-felt-temp-5"></h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="loading" class="spinner-border" style="width: 5rem; height: 5rem; position: absolute; top: 60%; left: 48%;" role="status">
+    </div>
+    <footer class="page-footer text-white font bg-dark">
+      <div class="footer-copyright text-center py-3">
+        <a style="text-decoration: none" href="https://github.com/tetochannel" target="_blank">
+          <svg height="32" class="octicon octicon-mark-github text-white" viewBox="0 0 16 16" version="1.1" width="32" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+          <b>Tetochannel</b>
+        </a>
+      </div>
+    </footer>
+    <script src="main.js"></script>
+    <script
+      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+  </body>
+</html>
